@@ -1,13 +1,14 @@
 // ==UserScript==
-// @name         AutoTrimpsV2+unimod
-// @version      2.1.5.6p7-coderpatsy-11-6-2017+UniMod
-// @description  try to take over the world!
-// @author       zininzinin, spindrjr, belaith, ishakaru, genBTC, Unihedron, coderpatsy
+// @name         AutoTrimpsV2+coderpatsy
+// @namespace    https://github.com/coderpatsy/AutoTrimps
+// @version      2.1.5.8p8-coderpatsy-11-9-2017+Mod+Uni
+// @description  Automate all the trimps!
+// @author       zininzinin, spindrjr, belaith, Ishkaru, genBTC, Unihedron, coderpatsy
 // @include      *trimps.github.io*
 // @include      *kongregate.com/games/GreenSatellite/trimps
 // @grant        none
 // ==/UserScript==
-var ATversion = '2.1.5.6p7-coderpatsy-11-6-2017+Modular';
+var ATversion = '2.1.5.8p8-coderpatsy-11-9-2017+Mod+Uni';
 
 ////////////////////////////////////////////////////////////////////////////////
 //Main Loader Initialize Function (loads first, load everything else)///////////
@@ -53,18 +54,10 @@ function initializeAutoTrimps() {
 
 function printChangelog() {
     tooltip('confirm', null, 'update', '\
-<br><b style="background-color:#002b3b">11/6/2017 v2.1.5.6p7</b>\
-<br>Fix Auto Gather 2 (whoops)\
-<br><b style="background-color:#002b3b">11/5/2017 v2.1.5.6p6</b>\
-<br>Revert grabbing prestige before running void maps\
-<br><b style="background-color:#002b3b">11/5/2017 v2.1.5.6p5</b>\
-<br>Quick fix Golden Helium being autobought before Golden Void is maxed\
-<br><b style="background-color:#002b3b">11/4/2017 v2.1.5.6p4</b>  Fixes\
-<br>Fix Auto Gather and Turkimp Tamer IV\
-<br>Fix Auto Magmamancer and Magmamancermancy\
-<br>Auto Maps displays "Off" and "Out of Map Credits" and updates He/Hr %\
-<br>Auto Maps grabs prestige before doing void maps\
-<br>Optimization with checking void maps\
+<br><b class="AutoEggs">11/9/2017 v2.1.5.8p8</b> genBTC update\
+<br>The genBTC version of the script has been updated with most of this fork\'s changes, and vice-versa.\
+<br>If you migrate, genBTC has a zone-based Maps -> Ignore Spires Until setting instead of this fork\'s genBTC -> Min Spire for AT.\
+<br>This fork will be kept up for the time being.\
 <br><u>Report any bugs/problems please! You can find me on Discord: <span style="background-color:#ddd;color:#222">patsy#5684</span></u>\
 <br><a href="https://github.com/coderpatsy/AutoTrimps/commits/gh-pages" target="#">Check the commit history</a> (if you care)\
 ', 'cancelTooltip()', 'Script Update Notice ' + ATversion);
