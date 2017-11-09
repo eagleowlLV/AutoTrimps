@@ -29,21 +29,42 @@ function autoRoboTrimp() {
 
 //Version 3.6 Golden Upgrades
 function autoGoldenUpgradesAT() {
+    var setting = getPageSetting('AutoGoldenUpgrades');
     //get the numerical value of the selected index of the dropdown box
     try {
-        var setting = document.getElementById('AutoGoldenUpgrades').value;
         if (setting == "Off") return;   //if disabled, exit.
         var num = getAvailableGoldenUpgrades();
         if (num == 0) return;       //if we have nothing to buy, exit.
         //buy one upgrade per loop.
         var success = buyGoldenUpgrade(setting);
-
         // DZUGAVILI MOD - SMART VOID GUs
+        // Assumption: buyGoldenUpgrades is not an asynchronous operation and resolves completely in function execution.
         // Assumption: "Locking" game option is not set or does not prevent buying Golden Void
-        if (setting == "Void" && !success) { // we can only buy a few void GUs
-            buyGoldenUpgrade("Helium"); // since we did not buy a "Void", we buy a "Helium" instead.
+        if (setting == "Void" && !success) { // we can only buy a few void GUs. We should check if we actually made the buy.
+            num = getAvailableGoldenUpgrades();
+            if (num == 0) return; // we actually bought the upgrade.
+            // DerSkagg Mod - For every Helium upgrade buy X-1 battle upgrades to maintain speed runs
+            var goldStrat = getPageSetting('goldStrat');
+            if (goldStrat == "Alternating"){
+                var goldAlternating = getPageSetting('goldAlternating');
+                if (game.global.goldenUpgrades%goldAlternating == 0){
+                    buyGoldenUpgrade("Helium");
+                }else{
+                    buyGoldenUpgrade("Battle");
+                }
+            }else if(goldStrat == "Zone"){
+                var zone = game.global.world;
+                var goldZone = getPageSetting('goldZone');
+                if (zone <= goldZone){
+                    buyGoldenUpgrade("Helium");
+                }else{
+                    buyGoldenUpgrade("Battle");
+                }
+            }else{
+                buyGoldenUpgrade("Helium");
+            }
         }
-        // END OF DZUGAVILI MOD
+        // END OF DerSkagg & DZUGAVILI MOD
 
     } catch(err) { debug("Error in autoGoldenUpgrades: " + err.message); }
 }
@@ -53,10 +74,8 @@ function autoNatureTokens() {
     var changed = false;
     for (var nature in game.empowerments) {
         var empowerment = game.empowerments[nature];
-        var dropdown = document.getElementById('Auto' + nature);
-        if (!dropdown) continue;
-        var setting = dropdown.value;
-        if (setting == 'Off') continue;
+        var setting = getPageSetting('Auto' + nature);
+        if (!setting || setting == 'Off') continue;
 
         //buy/convert once per nature per loop
         if (setting == 'Empowerment') {
@@ -66,7 +85,7 @@ function autoNatureTokens() {
             empowerment.tokens -= cost;
             empowerment.level++;
             changed = true;
-            debug('Upgraded Empowerment of ' + nature, 'General');
+            debug('Upgraded Empowerment of ' + nature, 'other');
         }
         else if (setting == 'Transfer') {
             if (empowerment.retainLevel >= 80)
@@ -76,7 +95,7 @@ function autoNatureTokens() {
             empowerment.tokens -= cost;
             empowerment.retainLevel++;
             changed = true;
-            debug('Upgraded ' + nature + ' transfer rate', 'General');
+            debug('Upgraded ' + nature + ' transfer rate', 'other');
         }
         else {
             if (empowerment.tokens < 10)
@@ -89,7 +108,7 @@ function autoNatureTokens() {
             var convertRate = (game.talents.nature.purchased) ? ((game.talents.nature2.purchased) ? 8 : 6) : 5;
             game.empowerments[targetNature].tokens += convertRate;
             changed = true;
-            debug('Converted ' + nature + ' tokens to ' + targetNature, 'General');
+            debug('Converted ' + nature + ' tokens to ' + targetNature, 'other');
         }
     }
 
