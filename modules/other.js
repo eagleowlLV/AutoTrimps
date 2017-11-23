@@ -1,7 +1,3 @@
-MODULES["magmite"] = {};
-//These can be changed (in the console) if you know what you're doing:
-MODULES["magmite"].algorithm = 2;   //2 is advanced cost/benefit calculation between capacity/efficiency. 1 is buy-cheapest-upgrade.
-
 // Finish Challenge2
 function finishChallengeSquared() {
     // some checks done before reaching this:
@@ -37,35 +33,30 @@ function autoGoldenUpgradesAT() {
         if (num == 0) return;       //if we have nothing to buy, exit.
         //buy one upgrade per loop.
         var success = buyGoldenUpgrade(setting);
+        //Challenge^2 cant Get/Buy Helium, so adapt - do Derskagg mod.
+        var challSQ = game.global.runningChallengeSquared;        
+        var doDerskaggChallSQ = false;
+        if (setting == "Helium" && challSQ && !success)
+            doDerskaggChallSQ = true;
         // DZUGAVILI MOD - SMART VOID GUs
         // Assumption: buyGoldenUpgrades is not an asynchronous operation and resolves completely in function execution.
         // Assumption: "Locking" game option is not set or does not prevent buying Golden Void
-        if (setting == "Void" && !success) { // we can only buy a few void GUs. We should check if we actually made the buy.
-            num = getAvailableGoldenUpgrades();
-            if (num == 0) return; // we actually bought the upgrade.
-            // DerSkagg Mod - For every Helium upgrade buy X-1 battle upgrades to maintain speed runs
+        if (!success && setting == "Void" || doDerskaggChallSQ) {
+            num = getAvailableGoldenUpgrades(); //recheck availables.
+            if (num == 0) return;  //we already bought the upgrade...(unreachable)
+            // DerSkagg Mod - Instead of Voids, For every Helium upgrade buy X-1 battle upgrades to maintain speed runs
             var goldStrat = getPageSetting('goldStrat');
-            if (goldStrat == "Alternating"){
+            if (goldStrat == "Alternating") {
                 var goldAlternating = getPageSetting('goldAlternating');
-                if (game.global.goldenUpgrades%goldAlternating == 0){
-                    buyGoldenUpgrade("Helium");
-                }else{
-                    buyGoldenUpgrade("Battle");
-                }
-            }else if(goldStrat == "Zone"){
-                var zone = game.global.world;
+                setting = (game.global.goldenUpgrades%goldAlternating == 0) ? "Helium" : "Battle";
+            } else if (goldStrat == "Zone") {
                 var goldZone = getPageSetting('goldZone');
-                if (zone <= goldZone){
-                    buyGoldenUpgrade("Helium");
-                }else{
-                    buyGoldenUpgrade("Battle");
-                }
-            }else{
-                buyGoldenUpgrade("Helium");
-            }
+                setting = (game.global.world <= goldZone) ? "Helium" : "Battle";
+            } else
+                setting = (!challSQ) ? "Helium" : "Battle";
+            buyGoldenUpgrade(setting);
         }
         // END OF DerSkagg & DZUGAVILI MOD
-
     } catch(err) { debug("Error in autoGoldenUpgrades: " + err.message); }
 }
 
@@ -111,7 +102,6 @@ function autoNatureTokens() {
             debug('Converted ' + nature + ' tokens to ' + targetNature, 'other');
         }
     }
-
     if (changed)
         updateNatureInfoSpans();
 }

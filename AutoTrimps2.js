@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         AutoTrimpsV2+coderpatsy
 // @namespace    https://github.com/coderpatsy/AutoTrimps
-// @version      2.1.5.8p8-coderpatsy-11-9-2017+Mod+Uni
+// @version      2.1.5.9p8-coderpatsy-11-2-2017+Mod+Uni
 // @description  Automate all the trimps!
 // @author       zininzinin, spindrjr, belaith, Ishkaru, genBTC, Unihedron, coderpatsy
 // @include      *trimps.github.io*
 // @include      *kongregate.com/games/GreenSatellite/trimps
 // @grant        none
 // ==/UserScript==
-var ATversion = '2.1.5.8p8-coderpatsy-11-9-2017+Mod+Uni';
+var ATversion = '2.1.5.9p8-coderpatsy-11-22-2017+Mod+Uni';
 
 ////////////////////////////////////////////////////////////////////////////////
 //Main Loader Initialize Function (loads first, load everything else)///////////
@@ -54,7 +54,7 @@ function initializeAutoTrimps() {
 
 function printChangelog() {
     tooltip('confirm', null, 'update', '\
-<br><b class="AutoEggs">11/9/2017 v2.1.5.8p8</b> genBTC update\
+<br><b class="AutoEggs">11/22/2017 v2.1.5.9p8</b> genBTC update\
 <br>The genBTC version of the script has been updated with most of this fork\'s changes, and vice-versa.\
 <br>If you migrate, genBTC has a zone-based Maps -> Ignore Spires Until setting instead of this fork\'s genBTC -> Min Spire for AT.\
 <br>This fork will be kept up for the time being.\

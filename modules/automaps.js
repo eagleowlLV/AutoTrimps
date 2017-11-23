@@ -25,6 +25,8 @@ MODULES["automaps"].watchChallengeMaps = [15, 25, 35, 50];  //during 'watch' cha
 MODULES["automaps"].shouldFarmCell = 59;
 MODULES["automaps"].SkipNumUnboughtPrestiges = 2;   //exceeding this number of unbought prestiges will trigger a skip of prestige mode.
 MODULES["automaps"].UnearnedPrestigesRequired = 2;
+MODULES["automaps"].maxMapBonusAfterZ = MODULES["automaps"].maxMapBonus;   //Max Map Bonus After Zone uses this many stacks 
+                                                                 //- init as default value (10). user can set if they want.
 
 
 //Initialize Global Vars (dont mess with these ones, nothing good can come from it).
@@ -44,6 +46,7 @@ var lastMapWeWereIn = null;
 var preSpireFarming = false;
 var spireMapBonusFarming = false;
 var spireTime = 0;
+var doMaxMapBonus = false;
 
 //AutoMap - function originally created by Belaith (in 1971)
 //anything/everything to do with maps.
@@ -325,15 +328,12 @@ function autoMap() {
     //Farm X Minutes Before Spire:
     var shouldDoSpireMaps = false;
     preSpireFarming = (isActiveSpireAT()) && (spireTime = (new Date().getTime() - game.global.zoneStarted) / 1000 / 60) < getPageSetting('MinutestoFarmBeforeSpire');
-    if (preSpireFarming) {
+    spireMapBonusFarming = getPageSetting('MaxStacksForSpire') && isActiveSpireAT() && game.global.mapBonus < customVars.maxMapBonus;    
+    if (preSpireFarming || spireMapBonusFarming) {
         shouldDoMaps = true;
         shouldDoSpireMaps = true;
     }
-    spireMapBonusFarming = getPageSetting('MaxStacksForSpire') && isActiveSpireAT() && game.global.mapBonus < customVars.maxMapBonus;
-    if (spireMapBonusFarming) {
-        shouldDoMaps = true;
-    }
-    // Run a single map to get nurseries when 1. it's still locked,
+    //Run a single map to get nurseries when 1. it's still locked,
     // 2. blacksmithery is purchased,
     // but not when 3A. home detector is purchased, or 3B. we don't need nurseries
     if (game.buildings.Nursery.locked && game.talents.blacksmith.purchased && !(game.talents.housing.purchased ||
@@ -341,7 +341,14 @@ function autoMap() {
             !(getPageSetting('MaxNursery') && game.global.world >= getPageSetting('NoNurseriesUntil')) :
             !getPageSetting('PreSpireNurseries'))) && game.global.world >= customVars.NurseryMapLevel) {
         shouldDoMaps = true;
-        shouldDoWatchMaps = true;
+        shouldDoWatchMaps = true; //TODO coding: this is overloaded - not ideal.
+    }
+    //MaxMapBonusAfterZone (idea from awnv)
+    var maxMapBonusZ = getPageSetting('MaxMapBonusAfterZone');
+    doMaxMapBonus = false;
+    if (maxMapBonusZ >= 0 && game.global.mapBonus < customVars.maxMapBonusAfterZ && game.global.world >= maxMapBonusZ) {
+        shouldDoMaps = true;
+        doMaxMapBonus = true;
     }
 
     //Dynamic Siphonology section (when necessary)
@@ -565,7 +572,8 @@ function autoMap() {
         var repeatBionics = getPageSetting('RunBionicBeforeSpire') && game.global.bionicOwned >= 6;
         //if we are doing the right map, and it's not a norecycle (unique) map, and we aren't going to hit max map bonus
         //or repeatbionics is true and there are still prestige items available to get
-        if (selectedMap == game.global.currentMapId && (!getCurrentMapObject().noRecycle && (game.global.mapBonus < customVars.maxMapBonus-1 || shouldFarm || stackingTox || needPrestige || shouldDoSpireMaps) || repeatBionics)) {
+        var doDefaultMapBonus = game.global.mapBonus < customVars.maxMapBonus-1;
+        if (selectedMap == game.global.currentMapId && (!getCurrentMapObject().noRecycle && (doDefaultMapBonus || doMaxMapBonus || shouldFarm || stackingTox || needPrestige || shouldDoSpireMaps) || repeatBionics)) {
             var targetPrestige = autoTrimpSettings.Prestige.selected;
             //make sure repeat map is on
             if (!game.global.repeatMap) {
@@ -583,8 +591,15 @@ function autoMap() {
             if (shouldDoWatchMaps)
                 repeatClicked();
             //turn repeat off on the last WantHealth map.
-            if (shouldDoHealthMaps && game.global.mapBonus >= customVars.wantHealthMapBonus - 1)
+            if (shouldDoHealthMaps && game.global.mapBonus >= customVars.wantHealthMapBonus - 1) { 
                 repeatClicked();
+                shouldDoHealthMaps = false;
+            }
+            //turn repeat off on the last maxMapBonusAfterZ map.
+            if (doMaxMapBonus && game.global.mapBonus >= customVars.maxMapBonusAfterZ - 1) {
+                repeatClicked();
+                doMaxMapBonus = false;
+            }
         } else {
             //otherwise, make sure repeat map is off
             if (game.global.repeatMap) {
@@ -744,10 +759,19 @@ function autoMap() {
 function updateAutoMapsStatus() {
     //automaps status
     var status = document.getElementById('autoMapStatus');
+    var minSp = getPageSetting('MinutestoFarmBeforeSpire');
     if(!autoTrimpSettings.AutoMaps.enabled) status.innerHTML = 'Off';
     else if (game.global.challengeActive == "Mapology" && game.challenges.Mapology.credits < 1) status.innerHTML = 'Out of Map Credits';
-    else if (preSpireFarming) status.innerHTML = 'Spire farming for ' + (spireTime >= 60 ? (spireTime / 60).toFixed(2) + 'h' : spireTime.toFixed(2) + 'm');
+    else if (preSpireFarming) {
+        var secs = Math.floor(60 - (spireTime*60)%60).toFixed(0)
+        var mins = Math.floor(minSp - spireTime).toFixed(0);
+        var hours = minSp - (spireTime / 60).toFixed(2);
+        var spiretimeStr = (spireTime>=60) ? 
+            (hours + 'h') : (mins + 'm:' + (secs>=10 ? secs : ('0'+secs)) + 's');
+        status.innerHTML = 'Farming for Spire ' + spiretimeStr + ' left';
+    }
     else if (spireMapBonusFarming) status.innerHTML = 'Getting Spire Map Bonus';
+    else if (doMaxMapBonus) status.innerHTML = 'Max Map Bonus After Zone';
     else if (!game.global.mapsUnlocked) status.innerHTML = '&nbsp;';
     else if (needPrestige && !doVoids) status.innerHTML = 'Prestige';
     else if (doVoids && voidCheckPercent == 0) status.innerHTML = 'Void Maps: ' + game.global.totalVoidMaps + ' remaining';

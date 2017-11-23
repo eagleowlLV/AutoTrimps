@@ -5,7 +5,7 @@ Automation script for the idle incremental game Trimps, based on the zininzinin 
 Discord is a chat program. Come to talk about AutoTrimps, for help, or suggestions for new features : https://discord.gg/kSpNHte (the official Trimps server)
 
 ## Current Version
-- v2.1.5.8p8 - November 9, 2017
+- v2.1.5.9p8 - November 22, 2017
 
 ## Script Installation
 **Please backup your game via export before and during use to prevent losing your save due to corruption!**
@@ -19,7 +19,9 @@ javascript:with(document)(head.appendChild(createElement('script')).src='https:/
 Notes: https://github.com/genbtc/AutoTrimps/blob/gh-pages/README.md
 
 ## Current feature changes by coderpatsy
-**11/9/2017 v2.1.5.8p8**
+**11/22/2017 v2.1.5.9p8**
+<br>Merge in changes from genBTC
+<br>**11/9/2017 v2.1.5.8p8**
 <br>The genBTC version of the script has been updated with most of this fork's changes, and vice-versa.
 <br>If you migrate, genBTC has a zone-based Maps -> Ignore Spires Until setting instead of this fork's genBTC -> Min Spire for AT.
 <br>**11/6/2017 v2.1.5.6p7**
