@@ -5,7 +5,7 @@ Automation script for the idle incremental game Trimps, based on the zininzinin 
 Discord is a chat program. Come to talk about AutoTrimps, for help, or suggestions for new features : https://discord.gg/kSpNHte (the official Trimps server)
 
 ## Current Version
-- v2.1.5.9p9 - November 26, 2017
+- v2.1.5.9p10 - December 1, 2017
 
 ## Script Installation
 **Please backup your game via export before and during use to prevent losing your save due to corruption!**
@@ -19,7 +19,9 @@ javascript:with(document)(head.appendChild(createElement('script')).src='https:/
 Notes: https://github.com/genbtc/AutoTrimps/blob/gh-pages/README.md
 
 ## Current feature changes by coderpatsy
-**11/26/2017 v2.1.5.9p9**
+**12/1/2017 v2.1.5.9p10**
+<br>Add option to never use scryer in void maps
+<br>**11/26/2017 v2.1.5.9p9**
 <br>Fix Chrono/Jestimps in 4.6
 <br>**11/22/2017 v2.1.5.9p8**
 <br>Merge in changes from genBTC

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AutoTrimpsV2+coderpatsy
 // @namespace    https://github.com/coderpatsy/AutoTrimps
-// @version      2.1.5.9p9-coderpatsy-11-26-2017+Mod+Uni
+// @version      2.1.5.9p10-coderpatsy-12-1-2017+Mod+Uni
 // @description  Automate all the trimps!
 // @author       zininzinin, spindrjr, belaith, Ishkaru, genBTC, Unihedron, coderpatsy
 // @include      *trimps.github.io*

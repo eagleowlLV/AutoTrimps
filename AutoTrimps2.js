@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         AutoTrimpsV2+coderpatsy
 // @namespace    https://github.com/coderpatsy/AutoTrimps
-// @version      2.1.5.9p9-coderpatsy-11-26-2017+Mod+Uni
+// @version      2.1.5.9p10-coderpatsy-12-1-2017+Mod+Uni
 // @description  Automate all the trimps!
 // @author       zininzinin, spindrjr, belaith, Ishkaru, genBTC, Unihedron, coderpatsy
 // @include      *trimps.github.io*
 // @include      *kongregate.com/games/GreenSatellite/trimps
 // @grant        none
 // ==/UserScript==
-var ATversion = '2.1.5.9p9-coderpatsy-11-26-2017+Mod+Uni';
+var ATversion = '2.1.5.9p10-coderpatsy-12-1-2017+Mod+Uni';
 
 ////////////////////////////////////////////////////////////////////////////////
 //Main Loader Initialize Function (loads first, load everything else)///////////
@@ -54,6 +54,8 @@ function initializeAutoTrimps() {
 
 function printChangelog() {
     tooltip('confirm', null, 'update', '\
+<br><b class="AutoEggs">11/26/2017 v2.1.5.9p10</b>\
+<br>Add option to never use scryer in void maps\
 <br><b class="AutoEggs">11/26/2017 v2.1.5.9p9</b>\
 <br>Fix Chrono/Jestimps in 4.6\
 <br><b class="AutoEggs">11/22/2017 v2.1.5.9p8</b> genBTC update\
